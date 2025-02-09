@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>รายการหมวดหมู่</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Aboreto&family=Anuphan:wght@100..700&display=swap" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css" />
+    <style>
+        body {
+            font-family: "Anuphan", sans-serif;
+            font-size: 16px;
+            user-select: none;
+            color: #333;
+            background: linear-gradient(to bottom, #DFF3EA, #C2E4EF, #DFF3EA);
+            height: 100vh;
+            margin: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1.6rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        tr:nth-child(odd) {
+            background-color: #f2f2f2; /* เปลี่ยนสีแถวคี่ */
+        }
+
+        th {
+            background-color: #000;
+            color: white;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        tr:hover {
+            background-color: #e2e8f0;
+            transition: background-color 0.3s ease;
+        }
+
+        td {
+            padding: 12px;
+            word-break: break-word;
+        }
+
+        .action-buttons a {
+            margin-right: 0.5rem;
+            padding: 6px 12px;
+            border-radius: 8px;
+            color: white;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .action-buttons .edit-button {
+            background-color: #FFA500;
+        }
+
+        .action-buttons .delete-button {
+            background-color: #d74339;
+        }
+
+        .action-buttons a:hover {
+            opacity: 0.8;
+        }
+
+        .mb-4 {
+            margin-bottom: 1rem;
+        }
+          
+        .search-button-container {
+            display: flex;
+            align-items: center;
+        }
+          
+        .search-button {
+            background-color: #000;
+            color: #ffffff;
+            padding: 0 20px;
+            height: 45px;
+            border-radius: 9999px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            margin-bottom : -1.6rem;
+            margin-left: 1rem;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+          
+        .search-button:hover {
+            background-color: #333;
+            box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+         
+        .search-button:active {
+            background-color: #333;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+        }
+          
+        .search-dropdown {
+            flex: 1;
+        }
+          
+        .search-dropdown select {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease;
+            font-size: 14px;
+        }
+          
+        .search-dropdown select:focus {
+            border-color: #000;
+            outline: none;
+        }
+          
+        .search-input {
+            flex: 2;
+        }
+          
+        .search-text {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #ffffff;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+            transition: border-color 0.3s ease;
+            font-size: 14px;
+        }
+          
+        .search-text:focus {
+            border-color: #000;
+            outline: none;
+        }
+          
+        label {
+            margin-bottom: 4px;
+            display: block;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .clear-button {
+            background-color: #d74339;
+            color: #ffffff;
+            padding: 0 20px;
+            height: 45px;
+            border-radius: 9999px;
+            box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+            display: flex;
+            margin-bottom : -1.6rem;
+            margin-left: 1rem;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+          
+        .clear-button:hover {
+            background-color: #c73b2e;
+            box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.15);
+            transform: translateY(-2px);
+        }
+          
+        .clear-button:active {
+            background-color: #b03029;
+            box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+            transform: translateY(0);
+        }
+        
+        .flex-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .logout-button {
+            background-color: rgba(255, 255, 255, 0.55); /* สีขาวโปร่งใส 55% */
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            margin-left: auto;
+        }
+        .logout-button i {
+            margin-right: 8px;
+        }
+        .logout-button:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4">
+        <div class="header-container">
+            <h1 class="text-3xl font-bold mb-8" style="margin: 20px 0px 30px 0px">รายการหมวดหมู่</h1>
+            <form th:action="@{/logout}" method="post" style="display:inline;">
+                <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button> <!-- เพิ่มไอคอน Logout -->
+            </form>
+        </div>
+        <div class="flex-container">
+            <a href="/admin/categories/add" class="bg-black text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#333] transition-colors">
+                <i class="fas fa-plus h-5 w-5 mr-2"></i> เพิ่มหมวดหมู่ใหม่
+            </a>
+            <a th:href="@{/admin/home}" class="bg-black text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#333] transition-colors">
+                <i class="fas fa-home h-5 w-5 mr-2"></i> กลับสู่หน้าหลัก
+            </a>
+
+        </div>
+
+        <div class="mb-4">
+            <div class="flex space-x-4 items-center">
+
+                <div class="search-dropdown">
+                    <label for="searchType" class="block text-sm font-medium text-gray-700">ค้นหาจาก</label>
+                    <select id="searchType" class="searchType">
+                        <option value="categoryName">ชื่อหมวดหมู่</option>
+                    </select>
+                </div>
+            
+                <div class="search-input">
+                    <label for="searchInput" class="search-inp">คำค้นหา</label>
+                    <input type="text" id="searchInput" class="search-text" placeholder="พิมพ์คำค้นหา..." />
+                </div>
+            
+                <div class="search-button-container">
+                    <button id="searchButton" class="search-button">
+                        <i class="fas fa-search h-5 w-5 mr-2"></i> ค้นหา
+                    </button>
+                </div>
+
+                <div class="search-button-container">
+                    <button id="clearButton" class="clear-button">
+                        <i class="fas fa-times h-5 w-5 mr-2"></i> ล้างการค้นหา
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table id="categoryTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>ชื่อหมวดหมู่</th>
+                    <th>คำอธิบาย</th>
+                    <th>ตัวเลือก</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="category : ${categories}" class="table-row">
+                    <td th:text="${category.categoryId}"></td>
+                    <td th:text="${category.categoryName}"></td>
+                    <td th:text="${category.description}"></td>
+                    <td class="action-buttons">
+                        <a th:href="@{/admin/categories/edit/{id}(id=${category.categoryId})}" class="edit-button">Edit</a>
+                        <a th:href="@{/admin/categories/delete/{id}(id=${category.categoryId})}" class="delete-button" onclick="return confirmDelete()">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div id="message" th:if="${message}" th:text="${message}" style="color: green;"></div>
+        <div id="error" th:if="${error}" th:text="${error}" style="color: red;"></div>
+    </div>
+</body>
+<script>
+    document.getElementById("searchButton").addEventListener("click", function () {
+        var searchType = document.getElementById("searchType").value;
+        var searchInput = document.getElementById("searchInput").value.toLowerCase(); 
+        var tableRows = document.querySelectorAll("#categoryTable .table-row"); 
+
+        tableRows.forEach(function (row) {
+            var cellIndex = getColumnIndex(searchType);
+            var cell = row.querySelector("td:nth-child(" + cellIndex + ")");
+            if (cell) {
+                var cellValue = cell.textContent.toLowerCase();
+                if (cellValue.includes(searchInput)) {
+                    row.style.display = ""; 
+                } else {
+                    row.style.display = "none";
+                }
+            }
+        });
+    });
+
+    // ฟังก์ชันที่ใช้ในการคืนค่าคอลัมน์ที่ต้องการค้นหา
+    function getColumnIndex(type) {
+        switch (type) {
+            case "categoryName":
+                return 2;
+            default:
+                return 1;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        var messageElement = document.getElementById('message');
+        var errorElement = document.getElementById('error');
+    
+        function hideMessage(element) {
+            if (element) {
+                setTimeout(function() {
+                    element.style.transition = 'opacity 1s';
+                    element.style.opacity = '0';
+                    setTimeout(function() {
+                        element.style.display = 'none';
+                    }, 1000); // Delay before hiding the element
+                }, 3000); // Change this to 3000 milliseconds (3 seconds)
+            }
+        }
+    
+        hideMessage(messageElement);
+        hideMessage(errorElement);
+    });
+    
+    
+    function confirmDelete() {
+        return confirm("คุณแน่ใจหรือไม่ที่จะลบหมวดหมู่(Category) นี้?");
+    }
+
+    document.getElementById("clearButton").addEventListener("click", function () {
+        // ล้างค่าในช่องค้นหา
+        document.getElementById("searchInput").value = "";
+        var tableRows = document.querySelectorAll("#categoryTable .table-row");
+        tableRows.forEach(function (row) {
+            row.style.display = "";
+        });
+    });
+
+
+</script>
+</html>

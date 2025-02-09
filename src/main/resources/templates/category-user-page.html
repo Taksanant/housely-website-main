@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="th" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housely - ระบบขายหน้าร้าน</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Anuphan:wght@100..700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Anuphan', 'sans-serif'], // เปลี่ยนฟอนต์เป็น Anuphan
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: "Anuphan", sans-serif; // ฟอนต์ของ body
+            font-size: 16px;
+            color: #333;
+            background: linear-gradient(to bottom, #DFF3EA, #C2E4EF, #DFF3EA);
+            height: 100vh;
+            margin: 0;
+            user-select: none;
+        }
+        .logout-button {
+            background-color: rgba(255, 255, 255, 0.55); /* สีขาวโปร่งใส 55% */
+            border: none;
+            border-radius: 8px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: background 0.3s;
+        }
+        .logout-button i {
+            margin-right: 8px;
+        }
+        .logout-button:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+        header {
+            background: transparent;
+            color: #000;
+            padding: 15px;
+            display: flex;
+            justify-content:space-between;
+            align-items: center;
+        }
+        header h1 {
+            font-family: 'Aboreto', cursive;
+            font-size: 2.2em;
+            margin: 0;
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
+<header>
+    <h1><a href ="/user/product">HOUSELY</a></h1>
+    <nav class="bg-transparent shadow-none">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex justify-between">
+                <div class="flex space-x-7">                                     
+                </div>
+                <div class="hidden md:flex items-center space-x-3">
+                    <a href="/user/product" class="py-4 px-2 text-black-500 font-semibold hover:text-black-500 transition duration-300">สินค้า</a>
+                    <select class="py-2 px-2 text-black-500 font-semibold bg-white border border-black-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black-500" onchange="location = this.value; showSelectedRoom(this);">
+                        <option value="">เลือกหมวดหมู่</option>
+                        <option th:each="cate : ${categorys}" 
+                                th:value="@{/user/product/category/{id}(id=${cate.categoryId})}" 
+                                th:text="${cate.categoryName}"></option>
+                    </select>
+                    <select class="py-2 px-2 text-black-500 font-semibold bg-white border border-black-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-black-500" onchange="location = this.value; showSelectedRoom(this);">
+                        <option value="">เลือกห้อง</option>
+                        <option th:each="room : ${rooms}" 
+                                th:value="@{/user/product/room/{id}(id=${room.id})}" 
+                                th:text="${room.roomName}"></option>
+                    </select>
+                    <a href="#" class="py-4 px-2 text-black-500 font-semibold hover:text-black-500 transition duration-300">คำสั่งซื้อ</a>
+                    <a href="#" id="userMenuButton" class="py-4 px-2 text-black-500 font-semibold hover:text-black-500 transition duration-300"</a>
+                        <i class="fas fa-user mr-2"></i> <!-- User icon -->
+                        <span th:text="${userName}"></span>
+                        <div id="userDropdown" class="absolute hidden bg-white border border-black-300 rounded-md shadow-lg mt-2">
+                            <form th:action="@{/logout}" method="post" style="display:inline;">
+                                <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button> <!-- เพิ่มไอคอน Logout -->
+                            </form>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-wrap -mx-4">
+            <!-- รายการสินค้า -->
+            <div class="w-full md:w-2/3 px-4 mb-8">
+                <div class="flex">
+                    <span>
+                        <h2 class="text-2xl font-bold mb-4" th:text="'รายการสินค้า ' + ${category.categoryName}"></h2>
+                    </span>
+                    <span class="ml-4">
+                        <h1 id="selectedRoomTitle" class="text-2xl font-bold mb-4"></h1>
+                    </span>
+                
+                </div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="productList">
+                    <div th:each="product : ${products}" class="bg-white rounded-lg shadow-md overflow-hidden transition duration-300 ease-in-out transform hover:scale-105">
+                        <a th:href="@{'/user/product/' + ${product.id}}">
+                            <img th:src="@{'/uploads/' + ${product.imageBase64}}" class="w-full h-32 object-cover" alt="Product Image">
+                        </a>                        
+                        <div class="p-4">
+                            <h5 class="text-lg font-semibold mb-2" th:text="${product.productName}"></h5>
+                            <div class="flex justify-between items-center">
+                                <span class="text-lg font-bold text-blue-600" th:text="${#numbers.formatCurrency(product.price)}"></span>
+                                <span class="text-sm text-gray-500" th:text="${'จำนวน: ' + product.quantity}"></span>
+                            </div>
+                            <button onclick="addToCart(this)" th:data-id="${product.id}" th:data-name="${product.productName}" th:data-price="${product.price}" class="mt-2 w-full bg-black text-white py-1 px-2 rounded text-sm hover:bg-gray-800 transition duration-300">เพิ่มลงตะกร้า</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ตะกร้าสินค้า -->
+            <div class="w-full md:w-1/3 px-4">
+                <h2 class="text-2xl font-bold mb-4">ตะกร้าสินค้า</h2>
+                <div class="bg-white rounded-lg shadow p-4">
+                    <ul id="cartItems" class="mb-4">
+                        <!-- รายการสินค้าในตะกร้าจะถูกเพิ่มที่นี่ด้วย JavaScript -->
+                    </ul>
+                    <div class="border-t pt-4">
+                        <p class="text-xl font-bold">ยอดรวม: <span id="totalAmount">0</span> บาท</p>
+                    </div>
+                    <button onclick="checkout()" class="mt-4 w-full bg-black text-white py-2 px-4 rounded hover:bg-gray-800 transition duration-300">ชำระเงิน</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+        function addToCart(button) {
+            const productId = button.getAttribute('data-id');
+            const productName = button.getAttribute('data-name');
+            const productPrice = parseFloat(button.getAttribute('data-price'));
+            const productQuantity = parseInt(button.closest('.bg-white').querySelector('span.text-sm.text-gray-500').textContent.split(': ')[1]);
+
+            const existingItem = cart.find(item => item.id === productId);
+            if (existingItem) {
+                if (existingItem.quantity < productQuantity) {
+                    existingItem.quantity += 1;
+                } else {
+                    alert('ไม่สามารถเพิ่มสินค้ามากกว่าที่มีอยู่ในคลัง');
+                    return;
+                }
+            } else {
+                if (1 <= productQuantity) {
+                    cart.push({ id: productId, name: productName, price: productPrice, quantity: 1 });
+                } else {
+                    alert('ไม่สามารถเพิ่มสินค้ามากกว่าที่มีอยู่ในคลัง');
+                    return;
+                }
+            }
+
+            updateCartDisplay();
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function updateCartDisplay() {
+            const cartItemsElement = document.getElementById('cartItems');
+            cartItemsElement.innerHTML = '';
+
+            cart.forEach(item => {
+                const li = document.createElement('li');
+                li.className = 'flex justify-between items-center mb-2';
+                li.innerHTML = `
+                    <span>${item.name} x ${item.quantity}</span>
+                    <span>${(item.price * item.quantity).toFixed(2)} บาท</span>
+                    <button onclick="removeFromCart('${item.id}')" class="text-red-500 hover:text-red-700 ml-4">ลบ</button>
+                    <button onclick="decreaseQuantity('${item.id}')" class="text-yellow-500 hover:text-yellow-700 ml-2">ลดจำนวน</button>
+                `;
+                cartItemsElement.appendChild(li);
+            });
+
+            const total = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+            document.getElementById('totalAmount').textContent = total.toFixed(2);
+        }
+
+        function decreaseQuantity(productId) {
+            const item = cart.find(item => item.id === productId);
+            if (item) {
+                item.quantity -= 1;
+                if (item.quantity <= 0) {
+                    cart = cart.filter(i => i.id !== productId);
+                }
+                updateCartDisplay();
+                localStorage.setItem('cart', JSON.stringify(cart));
+            }
+        }
+
+        function removeFromCart(productId) {
+            cart = cart.filter(item => item.id !== productId);
+            updateCartDisplay();
+            localStorage.setItem('cart', JSON.stringify(cart));
+        }
+
+        function checkout() {
+            if (cart.length === 0) {
+                alert('กรุณาเพิ่มสินค้าในตะกร้าก่อนชำระเงิน');
+            } else {
+                // Redirect to checkout page or process checkout
+                alert('ชำระเงินสำเร็จ');
+                localStorage.removeItem('cart'); // Clear cart after checkout
+                cart = [];
+                updateCartDisplay();
+            }
+        }
+
+        document.getElementById('userMenuButton').addEventListener('click', function() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('hidden');
+        });
+
+        window.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            if (!event.target.matches('#userMenuButton')) {
+                dropdown.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>

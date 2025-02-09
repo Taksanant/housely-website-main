@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Anuphan:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Anuphan', sans-serif;
+            background: linear-gradient(to bottom, #DFF3EA, #C2E4EF, #DFF3EA);
+            color: #333;
+            padding: 20px;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            user-select: none;
+        }
+        main {
+            max-width: 400px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #000;
+            margin-bottom: 20px;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-family: 'Anuphan', sans-serif;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #79985F;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #000;
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1>Register</h1>
+        <form th:action="@{/auth/register}" method="post">
+            <div>
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required/>
+            </div>
+            <div>
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required/>
+            </div>
+            <div>
+                <button type="submit">Register</button>
+            </div>
+        </form>
+        <div>
+            <a href="/auth/login">Login</a>
+        </div>
+    </main>
+</body>
+</html>

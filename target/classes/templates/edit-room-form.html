@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Form</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Aboreto&family=Anuphan:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: Anuphan, sans-serif;
+            background: linear-gradient(to bottom, #DFF3EA, #C2E4EF, #DFF3EA);
+            color: #333;
+            margin: 0;
+            user-select: none;
+            padding: 20px;
+        }
+        main {
+            max-width: 600px;
+            margin: auto;
+            background: rgba(255, 255, 255, 0.75);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #000;
+        }
+        div {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 10px;
+            font-family: Anuphan, sans-serif;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+        button {
+            background-color: #000;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        button:hover {
+            background-color: #333;
+        }
+        a {
+            text-decoration: none;
+            color: #000;
+            margin-left: 10px;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <h1><i class="fas fa-door-open"></i> Room Form</h1>
+        <form th:action="@{/admin/rooms/save/{id}(id=${room.id})}" th:object="${room}" method="post">
+            <div>
+                <label for="roomName">Room Name:</label>
+                <input type="text" id="roomName" th:field="*{roomName}" required placeholder="Enter room name" />
+            </div>
+            <div>
+                <label for="description">Description:</label>
+                <textarea id="description" th:field="*{description}" required placeholder="Enter description"></textarea>
+            </div>
+            <div>
+                <button type="submit"><i class="fas fa-save"></i> Save</button>
+                <a th:href="@{/admin/rooms}"><i class="fas fa-times"></i> Cancel</a>
+            </div>
+        </form>
+    </main>
+</body>
+</html>

@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>รายการสินค้า</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Aboreto&family=Anuphan:wght@100..700&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.0.3/dist/tailwind.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+    />
+    <style>
+      body {
+        font-family: "Anuphan", sans-serif;
+        font-size: 16px;
+        color: #333;
+        background: linear-gradient(to bottom, #DFF3EA, #C2E4EF, #DFF3EA);
+        height: 100vh;
+        margin: 0;
+        user-select: none;
+      }
+
+      table.table-striped {
+        border-collapse: separate;
+        border-spacing: 0;
+        border-radius: 12px;
+        margin-top: 1.6rem;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      table.table-striped thead {
+        background-color: #000;
+      }
+
+      table.table-striped thead th {
+        padding: 12px;
+        white-space: nowrap;
+      }
+
+      table.table-striped tbody tr:nth-child(even) {
+        background-color: #f8fafc;
+      }
+
+      table.table-striped tbody tr:hover {
+        background-color: #e2e8f0;
+        transition: background-color 0.3s ease;
+      }
+
+      .col-fixed {
+        width: 100px;
+      }
+
+      .col-name {
+        width: 200px;
+      }
+
+      .col-brand {
+        width: 150px;
+      }
+
+      .col-action{
+        width: 300px;
+      }
+
+      .word-break {
+        word-break: break-word;
+        white-space: normal;
+        overflow-wrap: break-word;
+      }
+
+      .mb-4 {
+        margin-bottom: 1rem;
+      }
+      
+      .search-button-container {
+        display: flex;
+        align-items: flex-end;
+      }
+      
+      .search-button {
+        background-color: #000;
+        color: #ffffff;
+        padding: 0 20px;
+        height: 45px;
+        border-radius: 9999px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        margin-bottom : -1.6rem;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      
+      .search-button:hover {
+        background-color: #333;
+        box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+     
+      .search-button:active {
+        background-color: #333;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+      }
+      
+      .search-dropdown {
+        flex: 1;
+      }
+      
+      .search-dropdown select {
+        width: 100%;
+        padding: 10px 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.3s ease;
+        font-size: 14px;
+      }
+      
+      .search-dropdown select:focus {
+        border-color: #000;
+        outline: none;
+      }
+      
+      .search-input {
+        flex: 2;
+      }
+      
+      .search-text {
+        width: 100%;
+        padding: 10px 16px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        background-color: #ffffff;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.05);
+        transition: border-color 0.3s ease;
+        font-size: 14px;
+      }
+      
+      .search-text:focus {
+        border-color: #000;
+        outline: none;
+      }
+      
+      
+      label {
+        margin-bottom: 4px;
+        display: block;
+        color: #333;
+        font-weight: 500;
+      }
+      .clear-button {
+        background-color: #d74339;
+        color: #ffffff;
+        padding: 0 20px;
+        height: 45px;
+        border-radius: 9999px;
+        box-shadow: 0px 8px 15px rgba(0, 0, 0, 0.1);
+        display: flex;
+        margin-bottom: -1.6rem;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        cursor: pointer;
+      }
+      
+      .clear-button:hover {
+        background-color: #c73b2e;
+        box-shadow: 0px 12px 20px rgba(0, 0, 0, 0.15);
+        transform: translateY(-2px);
+      }
+      
+      .clear-button:active {
+        background-color: #b03029;
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.1);
+        transform: translateY(0);
+      }
+      .logout-button {
+        background-color: rgba(255, 255, 255, 0.55); /* สีขาวโปร่งใส 55% */
+        border: none;
+        border-radius: 8px;
+        padding: 10px 20px;
+        cursor: pointer;
+        font-size: 1em;
+        transition: background 0.3s;
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+    }
+    .logout-button i {
+        margin-right: 8px;
+    }
+    .logout-button:hover {
+        background-color: rgba(255, 255, 255, 0.75);
+    }
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .flex-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+  }
+    </style>
+  </head>
+
+  <body>
+    <div class="container mx-auto p-4">
+      <div class="header-container">
+          <h1 class="text-3xl font-bold mb-8" style="margin: 20px 0px 30px 0px">รายการสินค้า</h1>
+          <form th:action="@{/logout}" method="post" style="display:inline;">
+              <button type="submit" class="logout-button"><i class="fas fa-sign-out-alt"></i>Logout</button> <!-- เพิ่มไอคอน Logout -->
+          </form>
+      </div>
+
+      <div class="flex-container">
+        <a href="/admin/products/add" class="bg-black text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#333] transition-colors">
+            <i class="fas fa-plus h-5 w-5 mr-2"></i> เพิ่มสินค้าใหม่
+        </a>
+        <a th:href="@{/admin/home}" class="bg-black text-white px-4 py-2 rounded-lg shadow-md hover:bg-[#333] transition-colors">
+            <i class="fas fa-home h-5 w-5 mr-2"></i> กลับสู่หน้าหลัก
+        </a>
+
+    </div>
+      <div class="mb-4">
+        <div class="flex space-x-4 items-center">
+          <!-- Dropdown เลือกประเภทการค้นหา -->
+          <div class="search-dropdown">
+            <label for="searchType" class="block text-sm font-medium text-gray-700">ค้นหาจาก</label>
+            <select id="searchType" class="searchType">
+              <option value="productName">ชื่อสินค้า</option>
+              <option value="brandName">ยี่ห้อ</option>
+              <option value="productCode">รหัสสินค้า</option>
+              <option value="categories">ประเภท</option>
+              <option value="rooms">ห้อง</option>
+            </select>
+          </div>
+      
+          <!-- ช่องค้นหา -->
+          <div class="search-input">
+            <label for="searchInput" class="search-inp">คำค้นหา</label>
+            <input type="text" id="searchInput" class="search-text" placeholder="พิมพ์คำค้นหา..." />
+          </div>
+      
+          <!-- ปุ่มค้นหา -->
+          <div class="search-button-container">
+            <button id="searchButton" class="search-button">
+              <i class="fas fa-search h-5 w-5 mr-2"></i> ค้นหา
+            </button>
+          </div>
+          <!-- ปุ่มล้างการค้นหา -->
+<div class="search-button-container">
+    <button id="clearButton" class="clear-button">
+      <i class="fas fa-times h-5 w-5 mr-2"></i> ล้างการค้นหา
+    </button>
+  </div>
+             
+      </div>      
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              รูปภาพ
+            </th>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              รหัสสินค้า
+            </th>
+            <th
+              class="col-brand px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              ยี่ห้อ
+            </th>
+            <th
+              class="col-name px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              ชื่อสินค้า
+            </th>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              ราคา
+            </th>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              จำนวนสต็อก
+            </th>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              ประเภท
+            </th>
+            <th
+              class="col-fixed px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              ห้อง
+            </th>
+            <th
+              class="col-action px-6 py-3 text-left text-l font-medium text-white uppercase tracking-wider"
+            >
+              การดำเนินการ
+            </th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200" id="productTable">
+          <tr class="table-row" th:each="product : ${products}">
+            <td class="word-break">
+              <img
+                th:src="@{'/uploads/' + ${product.imageBase64}}"
+                alt="Product Image"
+                style="width: 50px; height: 50px"
+              />
+            </td>
+            <td class="word-break" th:text="${product.productCode}"></td>
+            <td class="word-break" th:text="${product.brandName}"></td>
+            <td class="word-break" th:text="${product.productName}"></td>
+            <td class="word-break" th:text="${product.price}"></td>
+            <td class="word-break" th:text="${product.quantity}"></td>
+            <td>
+              <span th:each="category, stat : ${product.categories}">
+                <span
+                  class="word-break"
+                  th:text="${category.categoryName}"
+                ></span>
+                <span th:if="${!stat.last}">, </span>
+              </span>
+            </td>
+            <td>
+              <span th:each="room, stat : ${product.rooms}">
+                <span class="word-break" th:text="${room.roomName}"></span>
+                <span th:if="${!stat.last}">, </span>
+              </span>
+            </td>
+            <td>
+              <a th:href="@{'/admin/products/detail/' + ${product.id}}" class = "btn btn-info">Detail</a>
+              <a
+                th:href="@{'/admin/products/edit/' + ${product.id}}"
+                class="btn btn-warning"
+                >Edit</a
+              >
+              <a
+                th:href="@{'/admin/products/delete/' + ${product.id}}"
+                class="btn btn-danger"
+                onclick="return confirmDelete()"
+                >Delete</a
+              >
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <script>
+      // ฟังก์ชันการค้นหาข้อมูล
+      document
+        .getElementById("searchButton")
+        .addEventListener("click", function () {
+          var searchType = document.getElementById("searchType").value; // ประเภทการค้นหา
+          var searchInput = document
+            .getElementById("searchInput")
+            .value.toLowerCase(); // คำค้นหา
+          var tableRows = document.querySelectorAll("#productTable .table-row"); // แถวข้อมูลในตาราง
+
+          tableRows.forEach(function (row) {
+            var cellValue = row
+              .querySelector("td:nth-child(" + getColumnIndex(searchType) + ")")
+              .textContent.toLowerCase(); // ค่าของเซลล์ที่ค้นหา
+            if (cellValue.includes(searchInput)) {
+              row.style.display = ""; // แสดงแถวที่ตรงกับคำค้นหา
+            } else {
+              row.style.display = "none"; // ซ่อนแถวที่ไม่ตรงกับคำค้นหา
+            }
+          });
+        });
+
+      // ฟังก์ชันที่ใช้ในการคืนค่าคอลัมน์ที่ต้องการค้นหา
+      function getColumnIndex(type) {
+        switch (type) {
+          case "productCode":
+            return 2; // คอลัมน์รหัสสินค้า
+          case "brandName":
+            return 3; // คอลัมน์ยี่ห้อ
+          case "productName":
+            return 4; // คอลัมน์ชื่อสินค้า
+          case "categories":
+            return 8; // คอลัมน์ประเภท
+          case "rooms":
+            return 9; // คอลัมน์ห้อง
+          default:
+            return 0;
+        }
+      }
+
+      function confirmDelete() {
+        return confirm("คุณแน่ใจว่าต้องการลบสินค้านี้?");
+      }
+
+      document.getElementById("clearButton").addEventListener("click", function () {
+        // ล้างค่าในช่องค้นหา
+        document.getElementById("searchInput").value = "";
+      
+        // แสดงแถวทั้งหมดในตาราง
+        var tableRows = document.querySelectorAll("#productTable .table-row");
+        tableRows.forEach(function (row) {
+          row.style.display = ""; // แสดงแถวทั้งหมด
+        });
+      });
+      
+    </script>
+  </body>
+</html>
